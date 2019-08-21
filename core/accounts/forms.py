@@ -93,3 +93,18 @@ class SignUpForm(UserCreationForm):
             "university",
             "degree_commencement_year"
         ]
+class LoginForm(forms.Form):
+    '''Attributes added to customise for bootstrap'''
+    email = forms.CharField(widget=forms.TextInput(
+        attrs={'class': 'form-control', 'type':'text', 'name': 'Email', 
+            'placeholder': 'Email'}), label="Email")
+
+    password = forms.CharField(widget=forms.PasswordInput(
+        attrs={'class':'form-control', 'type':'password', 'name':'password1', 
+            'placeholder': 'Password'}), label="Password")
+
+    error_messages = {
+        'invalid_login': ("Please enter a correct %(email)s and password. "
+                           "Note that both fields may be case-sensitive."),
+        'inactive': ("This account is inactive."),
+    }

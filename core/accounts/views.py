@@ -7,7 +7,7 @@ from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import EmailMessage
 from django.contrib.auth.decorators import login_required
-from .forms import SignUpForm
+from .forms import SignUpForm, LoginForm
 from .models import User
 from .tokens import account_activation_token
 from .decorators import anon_required
@@ -105,3 +105,26 @@ def view_activate(request):
         c["message"] = "Your account has been successfully activated."
 
     return render(request, "activate-message.html", c)
+
+def view_signin(request):
+    if request.method == 'POST':
+        form = LoginForm()
+        email = request.POST['email']
+        password = request.POST['password']
+        user = authenticate(request, username=email, password=password)
+
+        if user is not None:
+            login(request, user)
+            messages = {'message': 'You have been logged in!'}
+            return HttpResponseRedirect('/') 
+
+        else:
+            messages = {'message': 'check your credentials!'}
+            return render(request, 'auth-login.html', messages) 
+
+
+    else:
+        form = LoginForm()
+
+
+    return render(request, 'auth-login.html', {'form': form})
